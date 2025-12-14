@@ -7,7 +7,7 @@ interface Props<T = any> {
 }
 
 const PageContext = createContext<Props>({
-  title: "항해플러스 프론트엔드 6기",
+  title: "항해플러스 프론트엔드 7기",
   data: null,
 });
 

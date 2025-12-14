@@ -37,9 +37,9 @@ export const Assignments = () => {
 export function generateAssignmentsMetadata(): MetadataConfig {
   return {
     ...baseMetadata,
-    title: "전체 과제 목록 - 항해플러스 프론트엔드 6기",
+    title: "전체 과제 목록 - 항해플러스 프론트엔드 7기",
     description:
-      "항해플러스 프론트엔드 6기의 모든 과제와 제출 통계를 확인하세요. React, TypeScript, JavaScript 실습 과제들의 진행 현황과 수강생들의 성과를 한눈에 살펴보실 수 있습니다.",
+      "항해플러스 프론트엔드 7기의 모든 과제와 제출 통계를 확인하세요. React, TypeScript, JavaScript 실습 과제들의 진행 현황과 수강생들의 성과를 한눈에 살펴보실 수 있습니다.",
     keywords: `${baseMetadata.keywords}, 과제목록, 제출통계, 실습과제, 프로젝트, 코딩과제`,
   };
 }

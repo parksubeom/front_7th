@@ -101,8 +101,8 @@ async function generateMetadata(url) {
 
     // Fallback 메타데이터
     return createMetaTags({
-      title: "항해플러스 프론트엔드 6기 기술블로그",
-      description: "항해플러스 프론트엔드 6기 수강생들의 과제 및 기술 블로그",
+      title: "항해플러스 프론트엔드 7기 기술블로그",
+      description: "항해플러스 프론트엔드 7기 수강생들의 과제 및 기술 블로그",
       ogImage: "/defaultThumbnail.jpg",
       keywords: "항해플러스, 프론트엔드, 기술블로그, React, JavaScript",
     });
@@ -110,8 +110,8 @@ async function generateMetadata(url) {
     console.error("메타데이터 생성 중 오류:", error);
     // 에러 시 기본 메타데이터 반환
     return createMetaTags({
-      title: "항해플러스 프론트엔드 6기 기술블로그",
-      description: "항해플러스 프론트엔드 6기 수강생들의 과제 및 기술 블로그",
+      title: "항해플러스 프론트엔드 7기 기술블로그",
+      description: "항해플러스 프론트엔드 7기 수강생들의 과제 및 기술 블로그",
       ogImage: "/defaultThumbnail.jpg",
       keywords: "항해플러스, 프론트엔드, 기술블로그, React, JavaScript",
     });

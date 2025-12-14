@@ -3,28 +3,28 @@ import { useAppDataContext } from "@/providers";
 import type { AssignmentSummary } from "../types";
 
 const ASSIGNMENTS_INFO: Record<string, { chapter: string; title: string }> = {
-  "hanghae-plus/front_6th_chapter1-1": {
+  "hanghae-plus/front_7th_chapter1-1": {
     chapter: "1. 자바스크립트 딥다이브",
     title: "1-1. 프레임워크 없이 SPA 만들기 (1)",
   },
-  "hanghae-plus/front_6th_chapter1-2": {
+  "hanghae-plus/front_7th_chapter1-2": {
     chapter: "1. 자바스크립트 딥다이브",
     title: "1-2. 프레임워크 없이 SPA 만들기 (2)",
   },
-  "hanghae-plus/front_6th_chapter1-3": {
+  "hanghae-plus/front_7th_chapter1-3": {
     chapter: "1. 자바스크립트 딥다이브",
     title: "1-3. React, Beyond the Basics",
   },
-  "hanghae-plus/front_6th_chapter2-1": { chapter: "2. 클린코드", title: "2-1. 클린코드와 리팩토링" },
-  "hanghae-plus/front_6th_chapter2-2": {
+  "hanghae-plus/front_7th_chapter2-1": { chapter: "2. 클린코드", title: "2-1. 클린코드와 리팩토링" },
+  "hanghae-plus/front_7th_chapter2-2": {
     chapter: "2. 클린코드",
     title: "2-2. 디자인 패턴과 함수형 프로그래밍",
   },
-  "hanghae-plus/front_6th_chapter2-3": { chapter: "2. 클린코드", title: "2-3. 관심사 분리와 폴더구조" },
-  "hanghae-plus/front_6th_chapter3-1": { chapter: "3. 테스트", title: "3-1. 프런트엔드 테스트 코드 (1)" },
-  "hanghae-plus/front_6th_chapter3-2": { chapter: "3. 테스트", title: "3-2. 프런트엔드 테스트 코드 (2)" },
-  "hanghae-plus/front_6th_chapter4-1": { chapter: "4. 성능최적화", title: "4-1. SSR, SSG, Infra" },
-  "hanghae-plus/front_6th_chapter4-2": { chapter: "4. 성능최적화", title: "4-2. 코드 관점의 성능 최적화" },
+  "hanghae-plus/front_7th_chapter2-3": { chapter: "2. 클린코드", title: "2-3. 관심사 분리와 폴더구조" },
+  "hanghae-plus/front_7th_chapter3-1": { chapter: "3. 테스트", title: "3-1. 프런트엔드 테스트 코드 (1)" },
+  "hanghae-plus/front_7th_chapter3-2": { chapter: "3. 테스트", title: "3-2. 프런트엔드 테스트 코드 (2)" },
+  "hanghae-plus/front_7th_chapter4-1": { chapter: "4. 성능최적화", title: "4-1. SSR, SSG, Infra" },
+  "hanghae-plus/front_7th_chapter4-2": { chapter: "4. 성능최적화", title: "4-2. 코드 관점의 성능 최적화" },
 };
 
 export const useAssignmentSummaries = () => {

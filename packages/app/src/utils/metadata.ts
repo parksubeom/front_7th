@@ -6,9 +6,9 @@ export interface MetadataConfig {
 }
 
 export const baseMetadata: MetadataConfig = {
-  title: "항해플러스 프론트엔드 6기 - 개발자 성장 스토리",
+  title: "항해플러스 프론트엔드 7기 - 개발자 성장 스토리",
   description:
-    "항해플러스 프론트엔드 6기 수강생들의  React, TypeScript, JavaScript 과제 제출 현황과 학습 과정을 확인하세요.",
+    "항해플러스 프론트엔드 7기 수강생들의  React, TypeScript, JavaScript 과제 제출 현황과 학습 과정을 확인하세요.",
   ogImage: "/defaultThumbnail.jpg",
   keywords: "항해플러스, 프론트엔드, 개발자교육, React, TypeScript, JavaScript, 기술면접, 웹개발",
 };

@@ -48,7 +48,7 @@ export function AppSidebar() {
             {!collapsed && (
               <>
                 <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">6기</span>
+                  <span className="text-white font-bold text-sm">7기</span>
                 </div>
                 <h4 className="text-lg font-bold text-primary">항해플러스 프론트엔드</h4>
               </>

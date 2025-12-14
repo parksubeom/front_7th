@@ -123,7 +123,7 @@ const HomePage = () => {
                 <BookOpen className="w-5 h-5 text-green-400" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-white">6기</div>
+                <div className="text-2xl font-bold text-white">7기</div>
                 <div className="text-sm text-slate-400">현재 기수</div>
               </div>
             </div>
@@ -143,9 +143,9 @@ const HomePage = () => {
 export function generateHomeMetadata(): MetadataConfig {
   return {
     ...baseMetadata,
-    title: "수강생 목록 - 항해플러스 프론트엔드 6기",
+    title: "수강생 목록 - 항해플러스 프론트엔드 7기",
     description:
-      "항해플러스 프론트엔드 6기 수강생들의 프로필과 과제 진행 현황을 한눈에 확인하세요. 각 수강생의 GitHub 정보, 제출한 과제 수, 합격 현황을 살펴보실 수 있습니다.",
+      "항해플러스 프론트엔드 7기 수강생들의 프로필과 과제 진행 현황을 한눈에 확인하세요. 각 수강생의 GitHub 정보, 제출한 과제 수, 합격 현황을 살펴보실 수 있습니다.",
     keywords: `${baseMetadata.keywords}, 수강생목록, 프로필, GitHub, 과제현황, 개발자포트폴리오`,
   };
 }

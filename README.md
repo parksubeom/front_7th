@@ -1,4 +1,4 @@
-# 항해플러스 6기 기술블로그를 쌔벼서 7기것도 만들자
+# 항해플러스 7기 기술블로그를 쌔벼서 7기것도 만들자
 
 > 항해플러스 7기 수강생들의 학습 과정과 과제 제출 현황을 보여주는 기술블로그
 
@@ -28,6 +28,7 @@ packages/
 ## 🛠️ 기술 스택
 
 ### Frontend (app)
+
 - **React 18** - UI 라이브러리
 - **TypeScript** - 타입 안전성
 - **Vite** - 빌드 도구
@@ -37,11 +38,13 @@ packages/
 - **Zustand** - 상태 관리
 
 ### Backend (crawler)
+
 - **NestJS** - Node.js 프레임워크
 - **TypeScript** - 타입 안전성
 - **GitHub API** - 데이터 수집
 
 ### 공통
+
 - **pnpm** - 패키지 매니저
 - **ESLint + Prettier** - 코드 품질
 - **Playwright** - E2E 테스트
@@ -78,6 +81,7 @@ pnpm dev
 ## 📜 주요 스크립트
 
 ### 전체 프로젝트
+
 - `pnpm dev` - 개발 서버 실행
 - `pnpm build` - 모든 패키지 빌드
 - `pnpm lint:fix` - 코드 린팅 및 자동 수정
@@ -86,6 +90,7 @@ pnpm dev
 - `pnpm preview` - 빌드된 앱 미리보기
 
 ### 배포
+
 - `pnpm gh-pages` - GitHub Pages 배포
 
 ## 🌐 배포
@@ -98,6 +103,7 @@ pnpm dev
 ## 📁 주요 디렉토리 구조
 
 ### packages/app/src/
+
 ```
 src/
 ├── components/       # 재사용 가능한 컴포넌트
@@ -115,11 +121,13 @@ src/
 ## 🔧 개발 가이드
 
 ### 코드 스타일
+
 - ESLint와 Prettier를 사용한 일관된 코드 스타일
 - Husky를 통한 pre-commit 훅으로 코드 품질 보장
 - TypeScript strict 모드 활성화
 
 ### 커밋 컨벤션
+
 Git 커밋 시 lint-staged가 자동으로 실행되어 코드 포맷팅을 수행합니다.
 
 ## 📄 라이선스
@@ -138,6 +146,6 @@ Git 커밋 시 lint-staged가 자동으로 실행되어 코드 포맷팅을 수�
 ---
 
 <div align="center">
-  <strong>항해플러스 6기 기술블로그</strong><br>
+  <strong>항해플러스 7기 기술블로그</strong><br>
   수강생들의 학습 여정을 기록합니다 🚀
 </div>

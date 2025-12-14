@@ -5,6 +5,7 @@
 **코드 리뷰를 수행할 때는 반드시 한국어로 답변해주세요. 모든 코멘트, 설명, 제안사항은 한국어로 작성해주세요.**
 
 ### 리뷰 톤 가이드
+
 - 건설적이고 친근한 톤으로 피드백 제공
 - 문제점 지적 시 개선 방안도 함께 제시
 - 좋은 코드에 대해서는 칭찬도 포함
@@ -12,7 +13,7 @@
 
 ## 프로젝트 개요
 
-이 프로젝트는 항해 플러스 프론트엔드 6기 과제 관리 시스템이며, 모노레포 구조를 사용합니다.
+이 프로젝트는 항해 플러스 프론트엔드 7기 과제 관리 시스템이며, 모노레포 구조를 사용합니다.
 
 - **app**: React + Vite 프론트엔드 애플리케이션
 - **domain**: 공통 타입 정의 및 도메인 로직
@@ -23,11 +24,13 @@
 ### 1. 아키텍처 & 구조
 
 #### 모노레포 구조
+
 - `packages/` 하위 각 패키지는 독립적인 역할 수행
 - `@hanghae-plus/domain` 패키지를 통한 타입 공유
 - 패키지 간 의존성은 `workspace:*`로 관리
 
 #### 폴더 구조 컨벤션
+
 ```
 src/
 ├── components/          # 재사용 UI 컴포넌트
@@ -46,18 +49,21 @@ src/
 ### 2. 코딩 스타일 & 컨벤션
 
 #### TypeScript
+
 - **Strict mode** 활성화 (`noUnusedLocals`, `noUnusedParameters` 포함)
 - 명시적 타입 정의 권장, `any` 사용 지양
 - 도메인 타입은 `@hanghae-plus/domain`에서 import
 - 인터페이스 명명: PascalCase (예: `UserWithCommonAssignments`)
 
 #### React 컴포넌트
+
 - **함수형 컴포넌트**만 사용
 - **Named export** 권장 (`export { ComponentName }`)
 - Props 타입은 컴포넌트 파일 내에 정의
 - 복잡한 로직은 커스텀 훅으로 분리
 
 #### import 순서
+
 ```typescript
 // 1. 외부 라이브러리
 import React from "react";
@@ -72,6 +78,7 @@ import "./styles.css";
 ```
 
 #### 스타일링
+
 - **Tailwind CSS** 사용
 - 컴포넌트 variant는 **class-variance-authority (cva)** 활용
 - 클래스 병합은 `cn()` 유틸 함수 사용
@@ -80,11 +87,13 @@ import "./styles.css";
 ### 3. 성능 & 최적화
 
 #### React 최적화
+
 - `useMemo`, `useCallback` 적절히 사용
 - 불필요한 리렌더 방지
 - 로딩 상태 관리는 `Suspense` 활용
 
 #### 번들 최적화
+
 - 절대경로 import (`@/`) 사용
 - 트리 쉐이킹을 위한 named export
 - 코드 스플리팅 고려
@@ -92,11 +101,13 @@ import "./styles.css";
 ### 4. 데이터 관리
 
 #### 상태 관리
+
 - 전역 상태는 **Zustand**
 - 서버 상태는 **TanStack Query**
 - 로컬 상태는 `useState`, `useReducer` 사용
 
 #### 타입 안전성
+
 - API 응답 타입 정의 필수
 - 공통 타입은 `@hanghae-plus/domain` 활용
 - 런타임 타입 검증도 고려
@@ -104,11 +115,13 @@ import "./styles.css";
 ### 5. 테스트
 
 #### E2E 테스트
+
 - **Playwright** 프레임워크 사용
 - 주요 사용자 플로우 커버
 - CI/CD 파이프라인 연동
 
 #### 테스트 명령어
+
 ```bash
 # E2E 테스트 실행
 pnpm test:e2e
@@ -120,11 +133,13 @@ pnpm test:e2e:ui
 ### 6. 코드 품질
 
 #### 린트 & 포매팅
+
 - **ESLint** + **Prettier** 설정 준수
 - **TypeScript ESLint** 규칙 적용
 - **Husky** + **lint-staged**로 커밋 전 검증
 
 #### 필수 검증 명령어
+
 ```bash
 # 타입 체크
 pnpm tsc
@@ -139,6 +154,7 @@ pnpm prettier:write
 ### 7. Git 컨벤션
 
 #### 커밋 메시지 포맷
+
 ```
 type(scope): 간단 설명
 
@@ -154,22 +170,26 @@ chore: 빌드/도구 관련 변경
 ```
 
 #### 브랜치 전략
+
 - 기능 브랜치는 `feat/#이슈번호` 형식
 - 메인 브랜치로 PR 생성
 
 ### 8. 성능 체크리스트
 
 #### 렌더링 성능
+
 - [ ] 불필요한 리렌더 방지
 - [ ] 적절한 메모이제이션 적용
 - [ ] 대용량 리스트는 가상화 고려
 
 #### 번들 사이즈
+
 - [ ] 불필요한 의존성 제거
 - [ ] 동적 import 사용
 - [ ] 트리 쉐이킹 최적화
 
 #### 접근성(a11y)
+
 - [ ] 시맨틱 HTML 사용
 - [ ] 적절한 aria 속성 추가
 - [ ] 키보드 내비게이션 지원
@@ -184,6 +204,7 @@ chore: 빌드/도구 관련 변경
 ## 리뷰 체크리스트
 
 ### 필수 체크
+
 - [ ] TypeScript 컴파일 에러 없음
 - [ ] ESLint 규칙 준수
 - [ ] 적절한 타입 정의
@@ -194,6 +215,7 @@ chore: 빌드/도구 관련 변경
 - [ ] 보안 이슈 없음
 
 ### 권장 사항
+
 - [ ] 코드 재사용성 고려
 - [ ] 적절한 에러 핸들링
 - [ ] 로딩 상태 관리

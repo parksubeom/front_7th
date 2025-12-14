@@ -181,7 +181,7 @@ export interface UserMetadataParams {
 export function generateUserMetadata({ userName, avatarUrl }: Omit<UserMetadataParams, "userId">): MetadataConfig {
   return {
     ...baseMetadata,
-    title: `${userName} - 개발자 프로필 | 항해플러스 프론트엔드 6기`,
+    title: `${userName} - 개발자 프로필 | 항해플러스 프론트엔드 7기`,
     description: `${userName}님의 개발자 프로필과 과제 포트폴리오를 확인하세요. 제출한 과제 목록, 합격 현황, GitHub 정보, 기술 성장 과정을 한눈에 살펴보실 수 있습니다.`,
     ogImage: avatarUrl || "/defaultThumbnail.jpg",
     keywords: `${baseMetadata.keywords}, ${userName}, 개발자프로필, 포트폴리오, GitHub프로필, 과제포트폴리오`,

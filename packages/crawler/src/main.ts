@@ -18,16 +18,15 @@ import { flatMap, flow, keyBy, omit, uniq } from 'es-toolkit/compat';
 
 const organization = 'hanghae-plus';
 const repos = [
-  'front_6th_chapter1-1',
-  'front_6th_chapter1-2',
-  'front_6th_chapter1-3',
-  'front_6th_chapter2-1',
-  'front_6th_chapter2-2',
-  'front_6th_chapter2-3',
-  'front_6th_chapter3-1',
-  'front_6th_chapter3-2',
-  'front_6th_chapter4-1',
-  'front_6th_chapter4-2',
+  'front_7th_chapter1-1',
+  'front_7th_chapter1-2',
+  'front_7th_chapter1-3',
+  'front_7th_chapter2-1',
+  'front_7th_chapter2-2',
+  'front_7th_chapter3-1',
+  'front_7th_chapter3-2',
+  'front_7th_chapter3-3',
+  'front_7th_chapter4-1',
 ];
 const dataDir = path.join(__dirname, '../../../docs/data');
 const createApp = (() => {

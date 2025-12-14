@@ -43,57 +43,7 @@ export class HanghaeService {
   }
 
   private adjustResult(results: AssignmentResult[]): AssignmentResult[] {
-    return produce(results, (draft) => {
-      // 김유현님 1주차 과제 URL 제출 링크 조정
-      draft[8].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter1-1/pull/22';
-      draft[61].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter1-1/pull/22';
-
-      // 신홍준님의 1주차 과제 URL 제출 링크 조정
-      draft[17].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter1-1/pull/77';
-      draft[70].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter1-1/pull/77';
-
-      // 정민기님 2주차 과제 URL 제출 링크 조정
-      draft[149].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter1-2/pull/13';
-      draft[202].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter1-2/pull/13';
-
-      // 김지혜님 4주차 과제 URL 제출 링크 조정
-      draft[327].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter2-1/pull/22';
-      draft[380].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter2-1/pull/22';
-
-      // 장루빈님 5주차 과제 URL 제출 링크 조정
-      draft[462].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter2-2/pull/30';
-      draft[515].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter2-2/pull/30';
-
-      // 정민기님 7주차 과제 URL 제출 링크 조정
-      draft[679].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter3-1/pull/17';
-      draft[732].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter3-1/pull/17';
-
-      // 김상수님 8주차 과제 URL 제출 링크 조정
-      draft[745].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter3-2/pull/45';
-      draft[798].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter3-1/pull/17';
-
-      // 권지호님 8주차 과제 URL 제출 링크 조정
-      draft[796].assignment.url =
-        'https://github.com/hanghae-plus/front_6th_chapter3-2/pull/3';
-
-      // 양창훈님 9주차 과제 URL 제출 링크 조정
-      draft[868].assignment.url = '';
-      draft[921].assignment.url = '';
-    });
+    return produce(results, (draft) => {});
   }
 
   public async getAssignmentResults(): Promise<AssignmentResult[]> {
