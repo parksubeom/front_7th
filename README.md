@@ -57,27 +57,6 @@ packages/
 
 ## 🚀 시작하기
 
-### 1. 저장소 클론
-
-```bash
-git clone https://github.com/YeongseoYoon-hanghae/front_6th.git
-cd front_6th
-```
-
-### 2. 의존성 설치
-
-```bash
-pnpm install
-```
-
-### 3. 개발 서버 실행
-
-```bash
-pnpm dev
-```
-
-개발 서버가 `http://localhost:5173`에서 실행됩니다.
-
 ## 📜 주요 스크립트
 
 ### 전체 프로젝트
