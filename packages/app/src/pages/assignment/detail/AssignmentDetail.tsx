@@ -68,7 +68,7 @@ export const AssignmentDetail = Object.assign(
                   </div>
                   <div className="flex items-center gap-4 text-xs text-gray-500">
                     <span>by {data.user}</span>
-                    <span>{new Date(data.createdAt).toLocaleDateString("ko-KR")}</span>
+                    <span suppressHydrationWarning>{new Date(data.createdAt).toLocaleDateString("ko-KR")}</span>
                   </div>
                 </div>
               </div>
