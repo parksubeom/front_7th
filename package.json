@@ -13,13 +13,13 @@
     "lint:fix": "pnpm run -r lint:fix",
     "tsc": "pnpm run -r tsc",
     "prettier:write": "prettier --write ./packages/*/src",
-    "preview": "pnpm -F @hanghae-plus/6th-blog preview",
+    "preview": "pnpm -F @hanghae-plus/7th-blog preview",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:report": "npx playwright show-report",
     "test:generate": "playwright codegen localhost:5173",
     "prepare": "husky",
-    "gh-pages": "pnpm -F @hanghae-plus/6th-blog generate:with-build && gh-pages -d ./packages/app/dist/client"
+    "gh-pages": "pnpm -F @hanghae-plus/7th-blog generate:with-build && gh-pages -d ./packages/app/dist/client"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -37,6 +37,7 @@
     "@types/node": "^24.0.13",
     "@vitest/coverage-v8": "latest",
     "@vitest/ui": "latest",
+    "cross-env": "^10.1.0",
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
@@ -45,6 +46,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.11",
     "prettier": "^3.4.2",
+    "shx": "^0.4.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.36.0",
     "vite": "npm:rolldown-vite@latest",

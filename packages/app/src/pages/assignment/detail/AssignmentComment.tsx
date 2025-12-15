@@ -12,7 +12,7 @@ export const AssignmentComment = (props: ComponentProps<"div">) => {
     const $script = document.createElement("script");
     $script.setAttribute("issue-term", "pathname");
     $script.setAttribute("theme", "github-dark");
-    $script.setAttribute("repo", `hanghae-plus/front_6th`);
+    $script.setAttribute("repo", `hanghae-plus/front_7th`);
     $script.type = "text/javascript";
     $script.async = true;
     $script.crossOrigin = "anonymous";

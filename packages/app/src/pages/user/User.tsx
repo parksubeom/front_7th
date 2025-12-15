@@ -94,14 +94,14 @@ const AssignmentCard = ({ id, title, url, createdAt, theBest, body }: Assignment
                     베스트
                   </Badge>
                 )}
-                
+
                 {/* ✅ 내부 링크: 이벤트 전파 방지(stopPropagation) 필수 */}
                 <Link
                   to={url}
                   className="text-xs text-slate-400 flex items-center space-x-1 hover:underline underline-offset-4"
                   target="_blank"
                   rel="noreferrer"
-                  onClick={(e) => {
+                  onClick={(e: any) => {
                     e.stopPropagation(); // 🚨 카드의 클릭 이벤트가 발생하지 않도록 막음
                   }}
                 >

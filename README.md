@@ -60,8 +60,8 @@ packages/
 ### 1. 저장소 클론
 
 ```bash
-git clone https://github.com/YeongseoYoon-hanghae/front_6th.git
-cd front_6th
+git clone https://github.com/YeongseoYoon-hanghae/front_7th.git
+cd front_7th
 ```
 
 ### 2. 의존성 설치

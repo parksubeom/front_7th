@@ -4,7 +4,7 @@ import path from "path";
 import appData from "../../docs/data/app-data.json" with { type: "json" };
 
 const env = process.env.NODE_ENV || "development";
-const base = "/front_6th";
+const base = "/front_7th";
 const template = fs.readFileSync(env === "production" ? "./dist/client/template.html" : "./index.html", "utf-8");
 
 const getUrls = async () => {
@@ -30,14 +30,11 @@ const getUrls = async () => {
 
 async function generateMetadata(url) {
   try {
-    // 컴포넌트에서 메타데이터 함수를 가져옴
     const components = await import("./dist/server/main-server.js");
 
-    // URL 패턴별 메타데이터 생성
     const userMatch = url.match(/\/@([^\\/]+)\//);
     const assignmentMatch = url.match(/\/assignment\/([^\\/]+)\//);
 
-    // 홈페이지
     if (url === "/") {
       const { generateHomeMetadata } = components;
       if (generateHomeMetadata) {
@@ -46,7 +43,6 @@ async function generateMetadata(url) {
       }
     }
 
-    // 과제 목록 페이지
     if (url === "/assignments/") {
       const { generateAssignmentsMetadata } = components;
       if (generateAssignmentsMetadata) {
@@ -55,7 +51,6 @@ async function generateMetadata(url) {
       }
     }
 
-    // 사용자별 페이지
     if (userMatch) {
       const userId = userMatch[1];
       const user = appData.users[userId];
@@ -92,14 +87,12 @@ async function generateMetadata(url) {
       }
     }
 
-    // 기본 메타데이터
     const { generateHomeMetadata } = components;
     if (generateHomeMetadata) {
       const metadata = generateHomeMetadata();
       return createMetaTags(metadata);
     }
 
-    // Fallback 메타데이터
     return createMetaTags({
       title: "항해플러스 프론트엔드 7기 기술블로그",
       description: "항해플러스 프론트엔드 7기 수강생들의 과제 및 기술 블로그",
@@ -108,7 +101,6 @@ async function generateMetadata(url) {
     });
   } catch (error) {
     console.error("메타데이터 생성 중 오류:", error);
-    // 에러 시 기본 메타데이터 반환
     return createMetaTags({
       title: "항해플러스 프론트엔드 7기 기술블로그",
       description: "항해플러스 프론트엔드 7기 수강생들의 과제 및 기술 블로그",
@@ -136,21 +128,18 @@ function createMetaTags({ title, description, ogImage, keywords }) {
 
 async function generate(url) {
   try {
-    // 개발 모드에서는 transformIndexHtml 사용
-    const fullUrl = path.join(base, url);
+    // [Fix] 윈도우 환경에서 path.join이 백슬래시(\)를 생성하여 Router 매칭 실패하는 문제 해결
+    // 생성된 경로의 모든 백슬래시를 슬래시(/)로 강제 치환
+    const fullUrl = path.join(base, url).replace(/\\/g, "/");
     const filePath = path.join("./dist/client", url, "index.html");
 
-    // SSR 모듈 로드
     const { render } = await import("./dist/server/main-server.js");
 
     const rendered = await render(fullUrl);
 
-    // URL별 메타데이터 생성
     const metadata = await generateMetadata(url);
 
-    const html = template
-      .replace(`<!--app-head-->`, `${metadata}${rendered.head ?? ""}`)
-      .replace(`<!--app-html-->`, rendered.html ?? "");
+    const html = template.replace(``, `${metadata}${rendered.head ?? ""}`).replace(``, rendered.html ?? "");
 
     const dirPath = path.join("./dist/client", url);
     if (!fs.existsSync(dirPath)) {
@@ -164,14 +153,13 @@ async function generate(url) {
 }
 
 async function generateSitemap(urls) {
-  const baseUrl = "https://hanghae-plus.github.io/front_6th";
+  const baseUrl = "https://hanghae-plus.github.io/front_7th";
   const lastMod = new Date().toISOString();
 
   const urlElements = urls
     .map((url) => {
       const fullUrl = url === "/" ? baseUrl : `${baseUrl}${url}`;
 
-      // URL 타입에 따른 priority와 changefreq 설정
       let priority = "0.8";
       let changefreq = "weekly";
 
@@ -210,7 +198,7 @@ ${urlElements}
 }
 
 async function generateRobotsTxt() {
-  const baseUrl = "https://hanghae-plus.github.io/front_6th";
+  const baseUrl = "https://hanghae-plus.github.io/front_7th";
 
   const robotsTxt = `User-agent: *
 Allow: /
