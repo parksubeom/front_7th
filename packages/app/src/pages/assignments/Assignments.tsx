@@ -14,7 +14,6 @@ const AssignmentsProvider = ({ children }: PropsWithChildren) => {
 
 export const Assignments = () => {
   const { summaries, stats } = usePageData<ReturnType<typeof useAssignmentSummaries>>();
-
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex flex-col space-y-2">
