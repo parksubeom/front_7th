@@ -1,6 +1,6 @@
 import type { GithubApiUsers, HanghaeUser } from "@hanghae-plus/domain";
 import { type PropsWithChildren, useMemo } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router"; // ✅ useNavigate 추가
 import { Calendar, Clock, Github, StarIcon } from "lucide-react";
 import { useUserIdByParam, useUserWithAssignments } from "@/features";
 import { Badge, Card } from "@/components";
@@ -23,7 +23,7 @@ const UserProfile = ({
       <Card className="p-6">
         <div className="flex flex-col items-center text-center space-y-4">
           {/* 프로필 이미지 */}
-          <a href={html_url} target="_blank">
+          <a href={html_url} target="_blank" rel="noreferrer">
             <div className="relative">
               <div className="w-48 h-48 rounded-full overflow-hidden ring-4 ring-orange-500/30">
                 <img src={avatar_url} alt={login} className="w-full h-full object-cover" />
@@ -38,7 +38,7 @@ const UserProfile = ({
               <p className="text-slate-300">{name}</p>
               {bio && <p>{bio}</p>}
               {blog && (
-                <a href={blog} target="_blank" className="text-blue-400 hover:underline">
+                <a href={blog} target="_blank" rel="noreferrer" className="text-blue-400 hover:underline">
                   {blog}
                 </a>
               )}
@@ -61,15 +61,23 @@ const UserProfile = ({
 };
 
 const AssignmentCard = ({ id, title, url, createdAt, theBest, body }: Assignment) => {
+  const navigate = useNavigate(); // ✅ 네비게이션 훅 사용
+
   // PR 본문을 기반으로 읽기 시간 계산
   const readingTime = useMemo(() => {
     if (!body) return { text: "1분 읽기" };
     return calculateReadingTime(body);
   }, [body]);
 
+  // ✅ 카드 클릭 핸들러
+  const handleCardClick = () => {
+    navigate(`./assignment/${id}/`);
+  };
+
   return (
     <Card className="hover:shadow-glow transition-all duration-300 cursor-pointer group bg-card border border-border">
-      <Link to={`./assignment/${id}/`} className="block">
+      {/* ❌ <Link> 제거하고 <div> + onClick으로 변경하여 HTML 중첩 규칙 준수 */}
+      <div onClick={handleCardClick} className="block w-full text-left">
         <div className="p-6">
           <div className="flex flex-col space-y-3">
             {/* 과제 제목 */}
@@ -86,15 +94,21 @@ const AssignmentCard = ({ id, title, url, createdAt, theBest, body }: Assignment
                     베스트
                   </Badge>
                 )}
+                
+                {/* ✅ 내부 링크: 이벤트 전파 방지(stopPropagation) 필수 */}
                 <Link
                   to={url}
                   className="text-xs text-slate-400 flex items-center space-x-1 hover:underline underline-offset-4"
                   target="_blank"
-                  onClick={(e) => e.stopPropagation()}
+                  rel="noreferrer"
+                  onClick={(e) => {
+                    e.stopPropagation(); // 🚨 카드의 클릭 이벤트가 발생하지 않도록 막음
+                  }}
                 >
                   <Github className="w-3 h-3" />
                   <span>Pull Request</span>
                 </Link>
+
                 <div className="flex items-center space-x-1">
                   <Calendar className="w-3 h-3" />
                   <span>{formatDate(createdAt)}</span>
@@ -107,7 +121,7 @@ const AssignmentCard = ({ id, title, url, createdAt, theBest, body }: Assignment
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     </Card>
   );
 };

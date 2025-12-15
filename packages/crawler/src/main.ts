@@ -17,6 +17,8 @@ import { addRankingToUsers } from './utils/ranking.utils';
 import { flatMap, flow, keyBy, omit, uniq } from 'es-toolkit/compat';
 
 const organization = 'hanghae-plus';
+
+// ✅ [수정 1] 7기 리포지토리 목록으로 갱신 (chapter3-3 추가)
 const repos = [
   'front_7th_chapter1-1',
   'front_7th_chapter1-2',
@@ -25,9 +27,11 @@ const repos = [
   'front_7th_chapter2-2',
   'front_7th_chapter3-1',
   'front_7th_chapter3-2',
-  'front_7th_chapter3-3',
+  'front_7th_chapter3-3', // 새로 추가된 챕터
   'front_7th_chapter4-1',
+  'front_7th_chapter4-2',
 ];
+
 const dataDir = path.join(__dirname, '../../../docs/data');
 const createApp = (() => {
   let app: INestApplication | null = null;
@@ -180,10 +184,38 @@ const generateAppData = () => {
 
   const userWithCommonAssignments = assignmentInfos.reduce(
     (acc, info) => {
-      const pull = pulls[info.assignment.url];
+      const lmsUrl = info.assignment.url;
+      let pull = pulls[lmsUrl];
+
+      // 만약 정확한 매칭이 안 되고, URL이 존재한다면?
+      if (!pull && lmsUrl) {
+        // 끝에 슬래시가 있으면 떼고 다시 찾아본다.
+        if (lmsUrl.endsWith('/')) {
+          const normalizedUrl = lmsUrl.slice(0, -1);
+          pull = pulls[normalizedUrl];
+        } 
+      }
+      if (!pull && info.name === "박수범") {
+        console.log("---------------------------------------------------");
+        console.log(`[매칭 실패 감지] 과제명: ${info.assignment.name}`);
+        console.log(`❌ LMS 제출 URL: '${lmsUrl}'`);
+        console.log(`🔍 내가 가진 GitHub PR 목록 키 샘플:`, Object.keys(pulls).slice(0, 3)); // 어떤 식으로 키가 저장되어 있는지 확인
+        
+        // 혹시 www가 붙었나? http인가? 공백이 있나?
+        if (lmsUrl) {
+             const manualCheck = Object.keys(pulls).find(key => key.includes("pull/75"));
+             if (manualCheck) {
+                 console.log(`💡 [힌트] GitHub에는 이런 주소로 있는데?: '${manualCheck}'`);
+                 console.log(`   (두 문자열이 정확히 일치하지 않습니다)`);
+             }
+        }
+        console.log("---------------------------------------------------");
+      }
+      // 그래도 없으면 패스
       if (!pull) {
         return acc;
       }
+
       const value: HanghaeUser =
         acc[pull.user.login] ??
         createUserWithCommonAssignments(
@@ -192,9 +224,12 @@ const generateAppData = () => {
           githubUsersMap[pull.user.login],
         );
 
-      value.assignments.push({
+  
+      (value.assignments as any[]).push({
         ...omit(info, ['name', 'feedback', 'assignment']),
         url: info.assignment.url,
+        assignmentName: info.assignment.name, // 진짜 과제 제목 추가!
+        week: (info.assignment as any).week,   // 주차 정보 추가!
       });
 
       return {

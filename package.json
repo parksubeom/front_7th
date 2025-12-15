@@ -1,5 +1,5 @@
 {
-  "name": "front-6th",
+  "name": "front-7th",
   "private": true,
   "version": "0.0.0",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "pnpm -F @hanghae-plus/6th-blog dev",
+    "dev": "pnpm -F @hanghae-plus/7th-blog dev",
     "build": "pnpm run -r build",
     "lint:fix": "pnpm run -r lint:fix",
     "tsc": "pnpm run -r tsc",

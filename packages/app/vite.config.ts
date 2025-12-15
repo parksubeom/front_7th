@@ -5,7 +5,7 @@ import path from "path";
 import svgr from "vite-plugin-svgr";
 
 export default createViteConfig({
-  base: "/front_6th/",
+  base: "/front_7th/",
   plugins: [react(), tailwindcss(), svgr()],
   resolve: {
     alias: {
