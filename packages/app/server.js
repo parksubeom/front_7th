@@ -3,6 +3,7 @@ import path from "path";
 
 import appData from "../../docs/data/app-data.json" with { type: "json" };
 
+process.env.TZ = "Asia/Seoul";
 const env = process.env.NODE_ENV || "development";
 const base = "/front_7th";
 const template = fs.readFileSync(env === "production" ? "./dist/client/template.html" : "./index.html", "utf-8");
