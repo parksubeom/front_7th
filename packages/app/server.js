@@ -148,8 +148,9 @@ async function generate(url) {
     // 🚨 [핵심 수정] 빈 문자열(``)이 아니라 주석()을 타겟팅하여 교체
     // 이렇게 해야 HTML 구조가 깨지지 않고 root 태그 안으로 정확히 들어갑니다.
     const html = template
-      .replace(``, `${metadata}${rendered.head ?? ""}`)
-      .replace(``, rendered.html ?? "");
+      .replace('', `${rendered.body ?? ""}`)
+      .replace('', `${metadata}${rendered.head ?? ''}`)
+      .replace('', rendered.html ?? '');
 
     const dirPath = path.join("./dist/client", url);
     if (!fs.existsSync(dirPath)) {
