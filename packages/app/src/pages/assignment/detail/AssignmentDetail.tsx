@@ -98,7 +98,7 @@ export const AssignmentDetail = Object.assign(
           </Card>
         </div>
 
-        <div className="overflow-auto">
+        <div className="overflow-auto" suppressHydrationWarning={true}>
           <MarkdownPreview
             source={data.body}
             className="p-6 max-w-full"
@@ -112,7 +112,7 @@ export const AssignmentDetail = Object.assign(
           />
         </div>
 
-        <div className="overflow-auto mt-9">
+        <div className="overflow-auto mt-9" suppressHydrationWarning={true}>
           <MarkdownPreview
             source={`## 과제 피드백\n${feedback}`}
             className="p-6 max-w-full"
