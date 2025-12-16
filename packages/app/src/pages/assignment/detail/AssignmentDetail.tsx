@@ -28,13 +28,26 @@ const AssignmentDetailProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-// 날짜 포맷 유틸 함수 - SSG와 클라이언트에서 동일한 결과 보장
+
 function formatDate(date: string | Date): string {
   const dateObj = typeof date === "string" ? new Date(date) : date;
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-  const day = String(dateObj.getDate()).padStart(2, "0");
-  return `${year}.${month}.${day}`; // "2024.12.15"
+
+  // 1. Intl API를 사용하여 시간대를 'Asia/Seoul'로 강제합니다.
+  const formatter = new Intl.DateTimeFormat("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: "Asia/Seoul", 
+  });
+
+  // 2. 포맷팅 된 결과를 우리가 원하는 "YYYY.MM.DD" 형식으로 다듬습니다.
+  const parts = formatter.formatToParts(dateObj);
+  
+  const year = parts.find((p) => p.type === "year")?.value;
+  const month = parts.find((p) => p.type === "month")?.value;
+  const day = parts.find((p) => p.type === "day")?.value;
+
+  return `${year}.${month}.${day}`;
 }
 
 // AssignmentDetail 페이지 메타데이터 생성 함수
