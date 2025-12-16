@@ -10,9 +10,5 @@ function main() {
   } else {
     createRoot($root).render(app);
   }
-  $root.innerHTML = ""; 
-
-  // 이제 깨끗한 도화지에 React 앱을 새로 그립니다.
-  createRoot($root).render(app);
 }
 main();

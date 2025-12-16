@@ -1,11 +1,15 @@
 import fs from "fs";
 import path from "path";
 
+// Node.js 버전에 따라 assert 문법이 다를 수 있으니 주의하세요. 
+// 최신 Node에서는 'with', 구버전에서는 'assert'를 사용합니다.
 import appData from "../../docs/data/app-data.json" with { type: "json" };
 
 process.env.TZ = "Asia/Seoul";
 const env = process.env.NODE_ENV || "development";
 const base = "/front_7th";
+
+// 템플릿 로드
 const template = fs.readFileSync(env === "production" ? "./dist/client/template.html" : "./index.html", "utf-8");
 
 const getUrls = async () => {
@@ -130,17 +134,22 @@ function createMetaTags({ title, description, ogImage, keywords }) {
 async function generate(url) {
   try {
     // [Fix] 윈도우 환경에서 path.join이 백슬래시(\)를 생성하여 Router 매칭 실패하는 문제 해결
-    // 생성된 경로의 모든 백슬래시를 슬래시(/)로 강제 치환
     const fullUrl = path.join(base, url).replace(/\\/g, "/");
     const filePath = path.join("./dist/client", url, "index.html");
 
     const { render } = await import("./dist/server/main-server.js");
 
+    // SSR 렌더링 수행
     const rendered = await render(fullUrl);
 
+    // 메타데이터 생성
     const metadata = await generateMetadata(url);
 
-    const html = template.replace(``, `${metadata}${rendered.head ?? ""}`).replace(``, rendered.html ?? "");
+    // 🚨 [핵심 수정] 빈 문자열(``)이 아니라 주석()을 타겟팅하여 교체
+    // 이렇게 해야 HTML 구조가 깨지지 않고 root 태그 안으로 정확히 들어갑니다.
+    const html = template
+      .replace(``, `${metadata}${rendered.head ?? ""}`)
+      .replace(``, rendered.html ?? "");
 
     const dirPath = path.join("./dist/client", url);
     if (!fs.existsSync(dirPath)) {
@@ -148,8 +157,9 @@ async function generate(url) {
     }
 
     fs.writeFileSync(filePath, html, "utf-8");
+    // console.log(`✅ Generated: ${url}`); // 로그가 너무 많으면 주석 처리
   } catch (error) {
-    console.error("❌ 생성 중 오류 발생:", error);
+    console.error(`❌ 생성 중 오류 발생 (${url}):`, error);
   }
 }
 
@@ -211,8 +221,16 @@ Sitemap: ${baseUrl}/sitemap.xml`;
   console.log("✅ robots.txt 생성 완료");
 }
 
+// 메인 실행 로직
 getUrls().then(async (urls) => {
-  urls.forEach(generate);
+  console.log(`🚀 총 ${urls.length}개의 페이지 생성을 시작합니다...`);
+  
+  // 🚨 [수정] forEach 대신 Promise.all 사용
+  // 모든 페이지 생성이 끝날 때까지 기다렸다가 사이트맵을 만듭니다.
+  await Promise.all(urls.map(generate));
+  
   await generateSitemap(urls);
   await generateRobotsTxt();
+  
+  console.log("✨ 모든 빌드 작업이 완료되었습니다.");
 });
