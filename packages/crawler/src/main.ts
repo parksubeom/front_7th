@@ -279,12 +279,6 @@ const generateAppData = () => {
     {} as Record<string, { name: string; feedback: string }>,
   );
 
-  // =============================================================
-  // 👇 [해결책 2 & 3] 챕터 통합 로직 (V8 Fatal Error 회피를 위해 for...of 사용)
-  // 동일 PR URL을 사용하는 기본/심화 과제를 하나의 챕터 제출물로 묶고,
-  // 모두 passed: true인 경우에만 최종 통과(passed: true)로 인정합니다.
-  // =============================================================
-
   type GroupedStep = {
     name: string;
     url: string;
@@ -315,7 +309,7 @@ const generateAppData = () => {
   const aggregatedAssignmentInfos: AssignmentResult[] = [];
 
   for (const group of Object.values(groupedAssignmentInfos)) {
-    // 🚨 통과 기준 검증: 모든 스텝(STEP 01, 02 등)이 passed: true 여야 최종 passed: true
+    // 통과 기준 검증: 모든 스텝(STEP 01, 02 등)이 passed: true 여야 최종 passed: true
     const isChapterPassed = group.originalSteps.every((step) => step.passed);
 
     // 챕터 이름 생성: 모든 스텝 이름을 합쳐서 하나의 챕터 이름으로 만듦
@@ -335,7 +329,6 @@ const generateAppData = () => {
 
     aggregatedAssignmentInfos.push({
       ...representativeInfo,
-      // 🚨 핵심 수정: passed 필드를 챕터 통과 기준으로 덮어씀
       passed: isChapterPassed,
       theBest: isTheBest,
       perfect: isPerfect,
@@ -348,14 +341,6 @@ const generateAppData = () => {
     } as AssignmentResult);
   }
 
-  // =============================================================
-  // [챕터 통합 로직 끝]
-  // =============================================================
-
-  // -------------------------------------------------------------
-  // [1인자 솔루션] 과제명 -> URL 키워드 변환기 (개선됨!)
-  // 과제 이름에서 STEP 번호를 추출하여 정확한 Chapter 키워드를 반환합니다.
-  // -------------------------------------------------------------
   const getRepoKeyword = (assignmentName: string): string => {
     // 공백 제거 및 소문자 변환
     const cleanName = assignmentName.replace(/\s/g, '').toLowerCase();
@@ -392,7 +377,7 @@ const generateAppData = () => {
   };
   // -------------------------------------------------------------
 
-  // 🚨 핵심 교체: assignmentInfos 대신 aggregatedAssignmentInfos를 사용하여 reduce 시작
+  // 핵심 교체: assignmentInfos 대신 aggregatedAssignmentInfos를 사용하여 reduce 시작
   const userWithCommonAssignments = aggregatedAssignmentInfos.reduce(
     (acc, info) => {
       let lmsUrl = normalizeUrl(info.assignment.url);
