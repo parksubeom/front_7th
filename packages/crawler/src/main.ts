@@ -16,6 +16,11 @@ import { HanghaeService } from './hanghae/hanghae.service';
 import { addRankingToUsers } from './utils/ranking.utils';
 import { flatMap, flow, keyBy, omit, uniq } from 'es-toolkit/compat';
 
+// -------------------------------------------------------------
+// [해결책 1] Hydration 에러 해결을 위한 빌드 시간대 고정 (KST)
+// -------------------------------------------------------------
+process.env.TZ = 'Asia/Seoul';
+
 const organization = 'hanghae-plus';
 
 const repos = [
@@ -37,65 +42,65 @@ const repos = [
 // -----------------------------------------------------------------------------
 const manualMatchingMap: Record<string, string> = {
   // 1팀
-  "김민석": "kju1018",
-  "강승훈": "seunghoonKang",
-  "안재현": "JaeHyunGround",
-  "박용태": "piggggggggy",
-  "도희정": "dev-learning1",
-  "천진아": "totter15",
+  김민석: 'kju1018',
+  강승훈: 'seunghoonKang',
+  안재현: 'JaeHyunGround',
+  박용태: 'piggggggggy',
+  도희정: 'dev-learning1',
+  천진아: 'totter15',
 
   // 2팀
-  "권지현": "kwonjihyeon-dev",
-  "이정민": "LEE-jm96",
-  "양진성": "jinseoIT",
-  "정나리": "naringst",
-  "전희재": "junijaei",
-  "김우정": "kimfriendship",
-  "고다솜": "ds92ko",
+  권지현: 'kwonjihyeon-dev',
+  이정민: 'LEE-jm96',
+  양진성: 'jinseoIT',
+  정나리: 'naringst',
+  전희재: 'junijaei',
+  김우정: 'kimfriendship',
+  고다솜: 'ds92ko',
 
   // 3팀
-  "김준모": "jumoooo",
-  "주민수": "Thomas97-J",
-  "이윤지": "yoonhihi97",
-  "김대현": "daehyunk1m",
-  "남은주": "amorpaty",
-  "박형우": "hyeongwoo94",
-  "한세준": "hansejun",
+  김준모: 'jumoooo',
+  주민수: 'Thomas97-J',
+  이윤지: 'yoonhihi97',
+  김대현: 'daehyunk1m',
+  남은주: 'amorpaty',
+  박형우: 'hyeongwoo94',
+  한세준: 'hansejun',
 
   // 4팀
-  "이예인": "yein1ee",
-  "한선민": "1lmean",
-  "박지영": "youngH02",
-  "김도현": "kimzeze",
-  "안소은": "ahnsummer",
-  "정한슬": "hanseul524",
-  "곽정원": "joshuayeyo",
+  이예인: 'yein1ee',
+  한선민: '1lmean',
+  박지영: 'youngH02',
+  김도현: 'kimzeze',
+  안소은: 'ahnsummer',
+  정한슬: 'hanseul524',
+  곽정원: 'joshuayeyo',
 
   // 5팀
-  "김성민": "devmineee",
-  "오새듬": "Toeam",
-  "오태준": "taejun0",
-  "손승현": "sonsonsh1125",
-  "김채영": "rlacodud",
-  "박수범": "parksubeom",
-  "진재윤": "jy0813",
+  김성민: 'devmineee',
+  오새듬: 'Toeam',
+  오태준: 'taejun0',
+  손승현: 'sonsonsh1125',
+  김채영: 'rlacodud',
+  박수범: 'parksubeom',
+  진재윤: 'jy0813',
 
   // 6팀
-  "현채은": "chen4023",
-  "박창수": "changsu1993",
-  "김소리": "milmilkim",
-  "김현우": "lecto17",
-  "전이진": "im-binary",
-  "노유리": "nohyr",
+  현채은: 'chen4023',
+  박창수: 'changsu1993',
+  김소리: 'milmilkim',
+  김현우: 'lecto17',
+  전이진: 'im-binary',
+  노유리: 'nohyr',
 
   // 7팀
-  "김민지": "minjeeki",
-  "윤지훈": "Jihoon-Yoon96",
-  "권연욱": "grappe96",
-  "황준태": "jthw1005",
-  "박희정": "Pheejung",
-  "이현지": "Leehyunji0715",
-  "신수빈": "ongsim0629",
+  김민지: 'minjeeki',
+  윤지훈: 'Jihoon-Yoon96',
+  권연욱: 'grappe96',
+  황준태: 'jthw1005',
+  박희정: 'Pheejung',
+  이현지: 'Leehyunji0715',
+  신수빈: 'ongsim0629',
 };
 // -----------------------------------------------------------------------------
 
@@ -274,29 +279,121 @@ const generateAppData = () => {
     {} as Record<string, { name: string; feedback: string }>,
   );
 
+  // =============================================================
+  // 👇 [해결책 2 & 3] 챕터 통합 로직 (V8 Fatal Error 회피를 위해 for...of 사용)
+  // 동일 PR URL을 사용하는 기본/심화 과제를 하나의 챕터 제출물로 묶고,
+  // 모두 passed: true인 경우에만 최종 통과(passed: true)로 인정합니다.
+  // =============================================================
+
+  type GroupedStep = {
+    name: string;
+    url: string;
+    originalSteps: AssignmentResult[];
+  };
+
+  // 1. LMS 과제 정보를 (사용자 이름 + PR URL) 기준으로 그룹화
+  const groupedAssignmentInfos: Record<string, GroupedStep> = {};
+
+  for (const info of assignmentInfos) {
+    const normalizedUrl = normalizeUrl(info.assignment.url);
+    if (!normalizedUrl) continue; // LMS URL이 없는 경우는 제외
+
+    // 키: 사용자 이름 + 정규화된 URL
+    const key = `${info.name}_${normalizedUrl}`;
+
+    if (!groupedAssignmentInfos[key]) {
+      groupedAssignmentInfos[key] = {
+        name: info.name,
+        url: normalizedUrl,
+        originalSteps: [],
+      };
+    }
+    groupedAssignmentInfos[key].originalSteps.push(info);
+  }
+
+  // 2. 각 그룹(PR)을 순회하며 '모든 스텝 통과' 여부를 검증하고 대표 레코드 생성
+  const aggregatedAssignmentInfos: AssignmentResult[] = [];
+
+  for (const group of Object.values(groupedAssignmentInfos)) {
+    // 🚨 통과 기준 검증: 모든 스텝(STEP 01, 02 등)이 passed: true 여야 최종 passed: true
+    const isChapterPassed = group.originalSteps.every((step) => step.passed);
+
+    // 챕터 이름 생성: 모든 스텝 이름을 합쳐서 하나의 챕터 이름으로 만듦
+    const chapterName = group.originalSteps
+      .map((step) => step.assignment.name)
+      .join(' & ');
+
+    // 플래그 통합 (하나라도 true면 true)
+    const isTheBest = group.originalSteps.some((step) => (step as any).theBest);
+    const isPerfect = group.originalSteps.some((step) => (step as any).perfect);
+    const isPassMultiple = group.originalSteps.some(
+      (step) => (step as any).passMultiple,
+    );
+
+    // 다음 로직에서 사용할 '대표' 레코드 생성
+    const representativeInfo = group.originalSteps[0];
+
+    aggregatedAssignmentInfos.push({
+      ...representativeInfo,
+      // 🚨 핵심 수정: passed 필드를 챕터 통과 기준으로 덮어씀
+      passed: isChapterPassed,
+      theBest: isTheBest,
+      perfect: isPerfect,
+      passMultiple: isPassMultiple,
+      assignment: {
+        ...representativeInfo.assignment,
+        name: chapterName, // 챕터 이름으로 통합
+        url: group.url, // 정규화된 URL
+      },
+    } as AssignmentResult);
+  }
+
+  // =============================================================
+  // [챕터 통합 로직 끝]
+  // =============================================================
+
   // -------------------------------------------------------------
-  // [1인자 솔루션] 과제명 -> URL 키워드 변환기
-  // "STEP03" 같은 제목이 들어오면 실제 GitHub Repo 이름의 일부를 반환합니다.
+  // [1인자 솔루션] 과제명 -> URL 키워드 변환기 (개선됨!)
+  // 과제 이름에서 STEP 번호를 추출하여 정확한 Chapter 키워드를 반환합니다.
   // -------------------------------------------------------------
   const getRepoKeyword = (assignmentName: string): string => {
-    // 1. 공백 제거 및 소문자 변환
+    // 공백 제거 및 소문자 변환
     const cleanName = assignmentName.replace(/\s/g, '').toLowerCase();
 
-    // 2. 특수 매핑 규칙 (STEP 시리즈 -> Chapter 리포지토리)
-    if (cleanName.includes('step03') || cleanName.includes('step04')) {
-      return 'chapter1-2'; // STEP 3, 4는 chapter1-2 리포지토리 사용
+    // STEP 번호를 추출하는 정규식 (STEPxx 형태)
+    const match = cleanName.match(/step(\d+)/);
+
+    if (match) {
+      const stepNumber = parseInt(match[1], 10);
+
+      // 1주차 (STEP 1, 2)
+      if (stepNumber <= 2) return 'chapter1-1';
+      // 2주차 (STEP 3, 4)
+      if (stepNumber <= 4) return 'chapter1-2';
+      // 3주차 (STEP 5, 6)
+      if (stepNumber <= 6) return 'chapter1-3';
+      // 4주차 (STEP 7, 8)
+      if (stepNumber <= 8) return 'chapter2-1';
+      // 5주차 (STEP 9, 10)
+      if (stepNumber <= 10) return 'chapter2-2';
+      // 6주차 (STEP 11, 12)
+      if (stepNumber <= 12) return 'chapter3-1';
+      // 7주차 (STEP 13, 14)
+      if (stepNumber <= 14) return 'chapter3-2';
+      // 8주차 (STEP 15, 16)
+      if (stepNumber <= 16) return 'chapter3-3';
+      // 9주차 (STEP 17, 18)
+      if (stepNumber <= 18) return 'chapter4-1';
+      // 10주차 (STEP 19, 20)
+      if (stepNumber <= 20) return 'chapter4-2';
     }
-    if (cleanName.includes('step05')) {
-      return 'chapter1-3'; // STEP 5는 chapter1-3 리포지토리 사용
-    }
-    
-    // 3. 기본 규칙 (Chapter X-X 형식은 그대로 사용)
-    // 예: "Chapter 2-2 ..." -> "chapter2-2"
-    return cleanName.split('.')[0]; 
+
+    return '';
   };
   // -------------------------------------------------------------
 
-  const userWithCommonAssignments = assignmentInfos.reduce(
+  // 🚨 핵심 교체: assignmentInfos 대신 aggregatedAssignmentInfos를 사용하여 reduce 시작
+  const userWithCommonAssignments = aggregatedAssignmentInfos.reduce(
     (acc, info) => {
       let lmsUrl = normalizeUrl(info.assignment.url);
       const pull = pulls[lmsUrl];
@@ -307,51 +404,65 @@ const generateAppData = () => {
 
         // 2. 없으면 프로필 이름으로 검색
         if (!matchedGithubId) {
-            const profile = githubProfiles.find(p => p.name === info.name);
-            if (profile) matchedGithubId = profile.login;
+          const profile = githubProfiles.find((p) => p.name === info.name);
+          if (profile) matchedGithubId = profile.login;
         }
 
         if (matchedGithubId) {
-             // 3. 검색 키워드 획득 (여기가 핵심 수정 사항!)
-             const searchKeyword = getRepoKeyword(info.assignment.name);
+          // 3. 검색 키워드 획득 (개선된 로직 사용)
+          const searchKeyword = getRepoKeyword(info.assignment.name);
 
-             const recoveredPull = Object.values(pulls).find(p => {
-                const isSameUser = p.user.login === matchedGithubId;
-                
-                // URL에 키워드가 포함되어 있는지 확인 (소문자로 비교)
-                const isSameAssignment = p.html_url.toLowerCase().includes(searchKeyword);
+          if (!searchKeyword) {
+            // 키워드 추출 실패 시 로그
+            // console.log(`⚠️ [키워드 실패] ${info.name}님의 [${info.assignment.name}]에서 챕터 키워드 추출 실패.`);
+            return acc;
+          }
 
-                return isSameUser && isSameAssignment;
+          const recoveredPull = Object.values(pulls).find((p) => {
+            const isSameUser = p.user.login === matchedGithubId;
+
+            // URL에 올바른 키워드(예: chapter2-2)가 포함되어 있는지 확인 (소문자로 비교)
+            const isSameAssignment = p.html_url
+              .toLowerCase()
+              .includes(searchKeyword);
+
+            return isSameUser && isSameAssignment;
+          });
+
+          if (recoveredPull) {
+            console.log(
+              `💡 [복구 성공] ${info.name}(${matchedGithubId}) -> 과제: ${info.assignment.name} (키워드: ${searchKeyword})`,
+            );
+
+            const value: HanghaeUser =
+              acc[recoveredPull.user.login] ??
+              createUserWithCommonAssignments(
+                recoveredPull,
+                info,
+                githubUsersMap[recoveredPull.user.login],
+              );
+
+            (value.assignments as any[]).push({
+              ...omit(info, ['name', 'feedback', 'assignment']),
+              url: normalizeUrl(recoveredPull.html_url),
+              assignmentName: info.assignment.name,
+              week: (info.assignment as any).week,
             });
 
-            if (recoveredPull) {
-                console.log(`💡 [복구 성공] ${info.name}(${matchedGithubId}) -> 과제: ${info.assignment.name} (키워드: ${searchKeyword})`);
-
-                const value: HanghaeUser =
-                    acc[recoveredPull.user.login] ??
-                    createUserWithCommonAssignments(
-                        recoveredPull,
-                        info,
-                        githubUsersMap[recoveredPull.user.login],
-                    );
-
-                (value.assignments as any[]).push({
-                    ...omit(info, ['name', 'feedback', 'assignment']),
-                    url: normalizeUrl(recoveredPull.html_url),
-                    assignmentName: info.assignment.name,
-                    week: (info.assignment as any).week,
-                });
-
-                return {
-                    ...acc,
-                    [recoveredPull.user.login]: value,
-                };
-            } else {
-                console.log(`⚠️ [부분 실패] ${info.name}님의 ID(${matchedGithubId})는 찾았으나, [${info.assignment.name}] 관련 PR이 없습니다.`);
-                console.log(`   👉 검색 키워드: "${searchKeyword}" / 검색 대상 Repo 예시: front_7th_chapter1-2 등`);
-            }
+            return {
+              ...acc,
+              [recoveredPull.user.login]: value,
+            };
+          } else {
+            console.log(
+              `⚠️ [부분 실패] ${info.name}님의 ID(${matchedGithubId})는 찾았으나, [${info.assignment.name}] 관련 PR이 없습니다.`,
+            );
+            console.log(
+              `   👉 검색 키워드: "${searchKeyword}" / 검색 대상 Repo 예시: ${repos.find((r) => r.includes(searchKeyword)) || '알 수 없음'}`,
+            );
+          }
         } else {
-            // console.log(`💀 [완전 실패] ${info.name}님은 수동 매핑/이름 매핑 모두 실패했습니다.`);
+          // console.log(`💀 [완전 실패] ${info.name}님은 수동 매핑/이름 매핑 모두 실패했습니다.`);
         }
         return acc;
       }

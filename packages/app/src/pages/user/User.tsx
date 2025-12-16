@@ -128,7 +128,7 @@ const AssignmentCard = ({ id, title, url, createdAt, theBest, body }: Assignment
 
 const AssignmentsList = ({ items }: { items: Assignment[] }) => {
   const sortedAssignments = useMemo(() => {
-    return [...items].sort((a, b) => a.title.localeCompare(b.title));
+    return [...items];
   }, [items]);
 
   return (
